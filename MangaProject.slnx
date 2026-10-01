@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="MangaProject.Api/MangaProject.Api.csproj" Id="f120c9a0-f133-435f-b227-167c1cdafa12" />
+  <Project Path="MangaProject.Application/MangaProject.Application.csproj" Id="e1b57ab6-ce37-4dee-ba1e-c09fb2fb2984" />
+  <Project Path="MangaProject.Domain/MangaProject.Domain.csproj" Id="0cf7aad8-d474-4c89-a89a-9c552f5e47ba" />
+  <Project Path="MangaProject.Infrastructure/MangaProject.Infrastructure.csproj" Id="22ada84b-fd4e-4f9f-b767-ccc823e0240e" />
+</Solution>
