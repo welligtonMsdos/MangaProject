@@ -43,7 +43,15 @@ builder.Services.AddControllers(options =>
     options.Filters.Add<ValidatorFilter>();
 });
 
-builder.Services.AddOpenApi();
+builder.Services.AddOpenApi(options =>
+{
+    options.AddDocumentTransformer((document, context, cancellationToken) =>
+    {
+        document.Servers = [new() { Url = "/" }];
+
+        return Task.CompletedTask;
+    });
+});
 
 builder.Services.AddApplication();
 
