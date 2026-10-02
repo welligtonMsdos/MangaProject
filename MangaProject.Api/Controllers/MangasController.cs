@@ -1,8 +1,6 @@
 ﻿using MangaProject.Api.Common;
-using MangaProject.Api.Exceptions;
 using MangaProject.Application.Dtos;
 using MangaProject.Application.Interfaces;
-using MangaProject.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -51,5 +49,30 @@ public sealed class MangasController : BaseController
         if (manga == null) return NotFound();
 
         return Ok(Result<MangaDto>.Ok(manga));
+    }
+
+    [HttpPut("{guid:guid}")]
+    [ProducesResponseType(typeof(Result<MangaDto>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<Result<MangaDto>>> Update(
+        Guid guid,
+        [FromBody] UpdateMangaDto request,
+        CancellationToken cancellationToken)
+    {
+        var manga = await _mangaService.UpdateAsync(guid, UserId, request, cancellationToken);
+
+        if (manga == null) return NotFound();
+
+        return Ok(Result<MangaDto>.Ok(manga));
+    }
+
+    [HttpDelete("{guid:guid}")]
+    [ProducesResponseType(typeof(Result<string>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<Result<string>>> Delete(Guid guid, CancellationToken cancellationToken)
+    {
+        var deleted = await _mangaService.DeleteAsync(guid, UserId, cancellationToken);
+
+        if (!deleted) return NotFound();
+
+        return Ok(Result<string>.Ok("Manga deletado com sucesso!"));
     }
 }

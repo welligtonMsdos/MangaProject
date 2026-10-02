@@ -15,3 +15,10 @@ public record MangaCreateDto(
     decimal Price
 );
 
+public record UpdateMangaDto(
+    string Title,
+    int Volume,
+    string Author,
+    decimal Price
+);
+
