@@ -61,6 +61,8 @@ public class MangaService : IMangaService
 
         var manga = await _mangaRepository.GetByGuid(guid, userId, cancellationToken);
 
+        if (manga is null) return null;       
+
         return ToDto(manga);
     }
 }

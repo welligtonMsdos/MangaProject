@@ -50,8 +50,11 @@ public class MangaRepository : IMangaRepository
 
         await using var connection = await _dataSource.OpenConnectionAsync(cancellationToken);
 
-        var manga = await connection.QuerySingleAsync<Manga>(
-            new CommandDefinition(sql, new { Guid = guid, UserId = userId }, cancellationToken: cancellationToken));
+        var manga = await connection.QuerySingleOrDefaultAsync<Manga>(
+        new CommandDefinition(
+            sql,
+            new { Guid = guid, UserId = userId },
+                cancellationToken: cancellationToken));       
 
         return manga;
     }

@@ -35,7 +35,7 @@ builder.Services.AddValidatorsFromAssemblyContaining<CreateMangaDtoValidator>();
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
-    options.SuppressModelStateInvalidFilter = true;
+    options.SuppressModelStateInvalidFilter = false;
 });
 
 builder.Services.AddControllers(options =>
