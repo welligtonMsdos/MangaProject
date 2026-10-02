@@ -1,4 +1,5 @@
-﻿using MangaProject.Application.Dtos;
+﻿using MangaProject.Api.Common;
+using MangaProject.Application.Dtos;
 using MangaProject.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,15 +23,22 @@ public sealed class MangasController : BaseController
         [FromBody] MangaCreateDto request,
         CancellationToken cancellationToken)
     {
-        var manga = await _mangaService.CreateAsync(UserId, request, cancellationToken);
+        var manga = await _mangaService.CreateAsync(UserId, request, cancellationToken);        
 
-        return CreatedAtAction(nameof(GetByGuid), new { guid = manga.Guid }, manga);
+        return CreatedAtAction(nameof(GetByGuid),
+                               new { guid = manga.Guid },
+                               Result<MangaDto>.Ok(manga, "Manga criado com sucesso!"));
     }
 
     [HttpGet]
     public async Task<ActionResult<IReadOnlyCollection<MangaDto>>> GetAll(
-        CancellationToken cancellationToken) =>
-        Ok(await _mangaService.GetAllAsync(UserId, cancellationToken));
+        CancellationToken cancellationToken)
+    {
+
+        var mangas = await _mangaService.GetAllAsync(UserId, cancellationToken);
+
+        return Ok(Result<IEnumerable<MangaDto>>.Ok(mangas));
+    }      
 
     [HttpGet("{guid:guid}")]
     public async Task<ActionResult<MangaDto>> GetByGuid(

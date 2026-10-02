@@ -1,0 +1,21 @@
+﻿services:
+  manga-project-api:
+    container_name: manga_project_api
+    build:
+      context: .
+      dockerfile: MangaProject.Api/Dockerfile
+    env_file:
+      - MangaProject.Api/.env
+    ports:
+      - "5015:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DOTNET_RUNNING_IN_CONTAINER=true
+    volumes:
+      - ./dataprotection-keys:/home/app/.aspnet/DataProtection-Keys 
+    networks:
+      - mangaBR-network 
+
+networks:
+  mangaBR-network:
+    driver: bridge 
