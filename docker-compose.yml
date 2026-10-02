@@ -7,10 +7,7 @@
     env_file:
       - MangaProject.Api/.env
     ports:
-      - "5015:8080"
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - DOTNET_RUNNING_IN_CONTAINER=true
+      - "5015:8080"    
     volumes:
       - ./dataprotection-keys:/home/app/.aspnet/DataProtection-Keys 
     networks:

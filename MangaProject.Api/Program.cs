@@ -83,7 +83,7 @@ app.MapOpenApi();
 
 app.MapScalarApiReference(options =>
 {
-    options.Title = "Manga Project API";
+    options.Title = "Manga Project API";    
     options.Theme = ScalarTheme.BluePlanet;
     options.DefaultHttpClient = new(ScalarTarget.JavaScript, ScalarClient.HttpClient);
     options.CustomCss = "";
@@ -107,3 +107,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+
