@@ -65,4 +65,34 @@ public class MangaService : IMangaService
 
         return ToDto(manga);
     }
+
+    public async Task<MangaDto?> UpdateAsync(Guid guid, string userId, UpdateMangaDto request, CancellationToken cancellationToken)
+    {
+        ValidateUserId(userId);
+
+        ArgumentNullException.ThrowIfNull(request);
+
+        var manga = new Manga
+        {
+            Guid = guid,
+            Title = request.Title,
+            Volume = request.Volume,
+            Author = request.Author,
+            Price = request.Price,
+            UserId = userId
+        };
+
+        var updated = await _mangaRepository.UpdateAsync(manga, userId, cancellationToken);
+
+        if (!updated) return null;
+
+        return ToDto(manga);
+    }
+
+    public async Task<bool> DeleteAsync(Guid guid, string userId, CancellationToken cancellationToken)
+    {
+        ValidateUserId(userId);
+
+        return await _mangaRepository.DeleteAsync(guid, userId, cancellationToken);
+    }
 }

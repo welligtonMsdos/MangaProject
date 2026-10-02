@@ -2,6 +2,7 @@
 using MangaProject.Domain.Entities;
 using MangaProject.Domain.Interfaces;
 using MangaProject.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
 namespace MangaProject.Infrastructure.Repositories;
@@ -24,12 +25,27 @@ public class MangaRepository : IMangaRepository
         await _dbContext.SaveChangesAsync(cancellationToken);
     }
 
+    public async Task<bool> DeleteAsync(Guid guid, string userId, CancellationToken cancellationToken)
+    {
+        var manga = await _dbContext.Mangas
+            .FirstOrDefaultAsync(v => v.Guid == guid && v.UserId == userId, cancellationToken);
+
+        if (manga is null) return false;
+       
+        _dbContext.Mangas.Remove(manga);
+        
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
+        return true;
+    }
+
     public async Task<IReadOnlyCollection<Manga>> GetAllAsync(string userId, CancellationToken cancellationToken)
     {
         const string sql = """
             SELECT "Guid", "Title", "Volume", "Author", "Price", "UserId"
             FROM "Manga"
-            WHERE "UserId" = @UserId;
+            WHERE "UserId" = @UserId
+            Order by "Title" ASC, "Volume" ASC;
             """;
 
         await using var connection = await _dataSource.OpenConnectionAsync(cancellationToken);
@@ -57,5 +73,22 @@ public class MangaRepository : IMangaRepository
                 cancellationToken: cancellationToken));       
 
         return manga;
+    }
+
+    public async Task<bool> UpdateAsync(Manga manga, string userId, CancellationToken cancellationToken)
+    {
+        var existingManga = await _dbContext.Mangas
+            .FirstOrDefaultAsync(v => v.Guid == manga.Guid && v.UserId == userId, cancellationToken);
+
+        if(existingManga is null) return false;
+
+        existingManga.Title = manga.Title;
+        existingManga.Volume = manga.Volume;
+        existingManga.Author = manga.Author;
+        existingManga.Price = manga.Price;
+
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
+        return true;
     }
 }
