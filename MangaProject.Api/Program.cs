@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 using System.Text;
-using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,13 +19,6 @@ if (File.Exists(envPath))
 }
 
 builder.Configuration.AddEnvironmentVariables();
-
-builder.Services.Configure<ForwardedHeadersOptions>(options =>
-{
-    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
-    options.KnownIPNetworks.Clear();
-    options.KnownProxies.Clear();
-});
 
 builder.Services.AddCors(options =>
 {
@@ -87,19 +79,11 @@ app.UseForwardedHeaders();
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
-app.UseCors("CorsPolicy");
-
-app.UseHttpsRedirection();
-
-app.UseAuthentication();
-
-app.UseAuthorization();
-
 app.MapOpenApi();
 
 app.MapScalarApiReference(options =>
 {
-    options.Title = "Manga Project API";
+    options.Title = "Manga Project API";    
     options.Theme = ScalarTheme.BluePlanet;
     options.DefaultHttpClient = new(ScalarTarget.JavaScript, ScalarClient.HttpClient);
     options.CustomCss = "";
@@ -112,6 +96,16 @@ app.MapScalarApiReference(options =>
            });
 });
 
+app.UseCors("CorsPolicy");
+
+app.UseHttpsRedirection();
+
+app.UseAuthentication();
+
+app.UseAuthorization();
+
 app.MapControllers();
 
 app.Run();
+
+
