@@ -19,6 +19,7 @@ public sealed class MangasController : BaseController
     }
 
     [HttpPost]
+    [ProducesResponseType(typeof(Result<MangaDto>), StatusCodes.Status201Created)]
     public async Task<ActionResult<MangaDto>> Create(
         [FromBody] MangaCreateDto request,
         CancellationToken cancellationToken)
@@ -34,7 +35,6 @@ public sealed class MangasController : BaseController
     [ProducesResponseType(typeof(Result<IEnumerable<MangaDto>>), StatusCodes.Status200OK)]
     public async Task<ActionResult<Result<IEnumerable<MangaDto>>>> GetAll(CancellationToken cancellationToken)
     {
-
         var mangas = await _mangaService.GetAllAsync(UserId, cancellationToken);
 
         return Ok(Result<IEnumerable<MangaDto>>.Ok(mangas));
@@ -44,10 +44,8 @@ public sealed class MangasController : BaseController
     [ProducesResponseType(typeof(Result<MangaDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult<Result<MangaDto>>> GetByGuid(Guid guid, CancellationToken cancellationToken)
     {
-        //var manga = await _mangaService.GetByGuidAsync(guid, UserId, cancellationToken);
+        var manga = await _mangaService.GetByGuidAsync(guid, UserId, cancellationToken);
 
-        //return manga is null ? NotFound() : Ok(manga);
-
-        return null;
+        return Ok(Result<MangaDto>.Ok(manga));
     }
 }

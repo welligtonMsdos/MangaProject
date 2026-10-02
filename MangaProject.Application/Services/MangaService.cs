@@ -53,5 +53,14 @@ public class MangaService : IMangaService
         manga.Title,
         manga.Volume,
         manga.Author,
-        manga.Price);       
+        manga.Price);
+
+    public async Task<MangaDto> GetByGuidAsync(Guid guid, string userId, CancellationToken cancellationToken)
+    {
+        ValidateUserId(userId);
+
+        var manga = await _mangaRepository.GetByGuid(guid, userId, cancellationToken);
+
+        return ToDto(manga);
+    }
 }
