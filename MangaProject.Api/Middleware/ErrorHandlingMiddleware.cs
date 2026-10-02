@@ -37,21 +37,21 @@ public class ErrorHandlingMiddleware
             await context.Response.WriteAsync(JsonSerializer.Serialize(response, options));
         }
         catch (Exception ex)
-        {
-            _logger.LogError(ex, "Critical Error");
+        {            
+            _logger.LogError(ex, "Ocorreu um erro não tratado durante a requisição.");
+           
+            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
 
             context.Response.ContentType = "application/json";
 
-            context.Response.StatusCode = 500;
-
-            var response = new Result<object>
+            var response = new
             {
-                Success = false,
-                Message = "Internal Server Error.",
-                Errors = ex.ToString()
+                status = 500,
+                message = "Ocorreu um erro interno no servidor. Tente novamente mais tarde.",
+                traceId = context.TraceIdentifier
             };
 
-            await context.Response.WriteAsync(JsonSerializer.Serialize(response));
+            await context.Response.WriteAsJsonAsync(response);
         }
     }
 }

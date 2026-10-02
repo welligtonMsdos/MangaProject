@@ -31,19 +31,18 @@ public sealed class MangasController : BaseController
     }
 
     [HttpGet]
-    public async Task<ActionResult<IReadOnlyCollection<MangaDto>>> GetAll(
-        CancellationToken cancellationToken)
+    [ProducesResponseType(typeof(Result<IEnumerable<MangaDto>>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<Result<IEnumerable<MangaDto>>>> GetAll(CancellationToken cancellationToken)
     {
 
         var mangas = await _mangaService.GetAllAsync(UserId, cancellationToken);
 
         return Ok(Result<IEnumerable<MangaDto>>.Ok(mangas));
-    }      
+    }
 
-    [HttpGet("{guid:guid}")]
-    public async Task<ActionResult<MangaDto>> GetByGuid(
-        Guid guid,
-        CancellationToken cancellationToken)
+    [HttpGet("{id}")]
+    [ProducesResponseType(typeof(Result<MangaDto>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<Result<MangaDto>>> GetByGuid(Guid guid, CancellationToken cancellationToken)
     {
         //var manga = await _mangaService.GetByGuidAsync(guid, UserId, cancellationToken);
 
