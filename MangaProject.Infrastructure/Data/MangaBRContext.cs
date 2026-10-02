@@ -16,6 +16,8 @@ public sealed class MangaBRContext: DbContext
         base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<Manga>(entity =>
         {
+            entity.ToTable(nameof(Manga));
+
             entity.HasKey(m => m.Guid);
             entity.Property(m => m.Title).IsRequired();
             entity.Property(m => m.Volume).IsRequired();

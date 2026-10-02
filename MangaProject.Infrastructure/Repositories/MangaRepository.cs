@@ -39,4 +39,23 @@ public class MangaRepository : IMangaRepository
 
         return mangas.AsList();
     }
+
+    public async Task<Manga> GetByGuid(Guid guid, string userId, CancellationToken cancellationToken)
+    {
+        const string sql = """
+            SELECT "Guid", "Title", "Volume", "Author", "Price", "UserId"
+            FROM "Manga"
+            WHERE "Guid" = @Guid AND "UserId" = @UserId;
+            """;
+
+        await using var connection = await _dataSource.OpenConnectionAsync(cancellationToken);
+
+        var manga = await connection.QuerySingleOrDefaultAsync<Manga>(
+        new CommandDefinition(
+            sql,
+            new { Guid = guid, UserId = userId },
+                cancellationToken: cancellationToken));       
+
+        return manga;
+    }
 }
