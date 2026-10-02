@@ -12,7 +12,11 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-DotNetEnv.Env.Load(Path.Combine(builder.Environment.ContentRootPath, ".env"));
+var envPath = Path.Combine(Directory.GetCurrentDirectory(), ".env");
+if (File.Exists(envPath))
+{
+    DotNetEnv.Env.Load(envPath);
+}
 
 builder.Configuration.AddEnvironmentVariables();
 

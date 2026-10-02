@@ -40,7 +40,7 @@ public sealed class MangasController : BaseController
         return Ok(Result<IEnumerable<MangaDto>>.Ok(mangas));
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{guid:guid}")]
     [ProducesResponseType(typeof(Result<MangaDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult<Result<MangaDto>>> GetByGuid(Guid guid, CancellationToken cancellationToken)
     {
